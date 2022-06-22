@@ -31,4 +31,5 @@ jobs:
         mv ../book/* .
         git add .
         git commit -m "Deploy $GITHUB_SHA to gh-pages"
-        git push --force
+        #git push --force
+        git push origin HEAD:gh-pages
