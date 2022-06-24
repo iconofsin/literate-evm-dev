@@ -1,0 +1,759 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Exchange - Literate EVM Dev</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../././mdbook-admonish.css">
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li class="chapter-item expanded "><a href="../UniswapV1/index.html"><strong aria-hidden="true">2.</strong> Uniswap v1 - Overview</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../UniswapV1/factory.html"><strong aria-hidden="true">2.1.</strong> Factory</a></li><li class="chapter-item expanded "><a href="../UniswapV1/exchange.html" class="active"><strong aria-hidden="true">2.2.</strong> Exchange</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Literate EVM Dev</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="exchange"><a class="header" href="#exchange">Exchange</a></h1>
+<p>Exchange (<a href="https://github.com/Uniswap/v1-contracts/blob/master/contracts/uniswap_exchange.vy">Github</a>) is a much more involved beast than <a href="./factory.html">Factory</a>, mostly due to its broader functionality (check out <a href="./index.html">Overview</a> and the external links to grasp the entire feature set).</p>
+<p>NB: Uniswap v1 Exchange was compiled and deployed (<a href="https://etherscan.io/address/0x2157A7894439191e520825fe9399aB8655E0f708">Etherscan.io</a>, <a href="https://etherscan.io/tx/0x9d30e48fb33a7b760d0b5c33253eb5a774c9dc8e9ee2768ad3425249a3319e09">tx</a>) using Vyper <a href="https://vyper.readthedocs.io/en/v0.1.0-beta.4/">v0.1.0b4</a>, which is <em>old</em>, no matter how you slice it. Consequently, the syntax of the language used at the time differs considerably from what you’ll see in the later versions of Vyper.</p>
+<pre><code class="language-python">contract Factory():
+    def getExchange(token_addr: address) -&gt; address: constant
+</code></pre>
+<p>Same as Factory, Exchange uses <code>contract</code> to define interfaces (instead of the more modern <code>interface</code>). The one above is a view function interface for Factory that resolves an ERC20 token address into the corresponding Exchange proxy address. </p>
+<pre><code class="language-python">contract Exchange():
+    def getEthToTokenOutputPrice(tokens_bought: uint256) -&gt; uint256(wei): constant
+    def ethToTokenTransferInput(min_tokens: uint256, deadline: timestamp, recipient: address) -&gt; uint256: modifying
+    def ethToTokenTransferOutput(tokens_bought: uint256, deadline: timestamp, recipient: address) -&gt; uint256(wei): modifying
+</code></pre>
+<p>Because Exchange is capable of interacting with other Exchange instances for the more complex trades, it needs to be able to talk to identical Exchange instances. This interface defines a view function <code>getEthToTokenOutputPrice</code>, and two state-modifying functions, <code>ethToTokenTransferInput</code> and <code>ethToTokenTransferOutput</code>. All three functions, naturally, are part of Exchange’s code.</p>
+<p>Pay attention to the <code>uint256(wei)</code> type. Back in the day, Vyper had <em>unit types</em><sup class="footnote-reference"><a href="#unittypes">1</a></sup>, which were specializers for regular integer-based types that served to strenghten typing and prevent the developer from mixing, for instance, timestamps and wei amounts in math expressions.</p>
+<p>// TODO: circle back</p>
+<pre><code class="language-python">TokenPurchase: event({buyer: indexed(address), eth_sold: indexed(uint256(wei)), tokens_bought: indexed(uint256)})
+EthPurchase: event({buyer: indexed(address), tokens_sold: indexed(uint256), eth_bought: indexed(uint256(wei))})
+AddLiquidity: event({provider: indexed(address), eth_amount: indexed(uint256(wei)), token_amount: indexed(uint256)})
+RemoveLiquidity: event({provider: indexed(address), eth_amount: indexed(uint256(wei)), token_amount: indexed(uint256)})
+Transfer: event({_from: indexed(address), _to: indexed(address), _value: uint256})
+Approval: event({_owner: indexed(address), _spender: indexed(address), _value: uint256})
+</code></pre>
+<p>Next, we declare events. <code>TokenPurchase</code>, <code>EthPurchase</code>, <code>AddLiquidity</code>, and <code>Remove Liquidity</code> are native to the protocol, while <code>Transfer</code> and <code>Approval</code> are intended for compatibility with the ERC20.</p>
+<p><code>TokenPurchase</code> is emitted when an ETH amount is traded for an ERC20 amount; with buyer’s address (<code>buyer</code>), amount of ETH sold (<code>eth_sold</code>), and amount of ERC20 bought (<code>tokens_bought</code>) as the arguments.</p>
+<p><code>EthPurchase</code> is the reverse, emitted when an ERC20 token is tradef for ETH; with buyer’s address (<code>buyer</code>), amount of ERC20 sold (<code>tokens_sold</code>), and ETH received (<code>eth_bought</code>) as the arguments.</p>
+<p>The next pair of events, <code>AddLiquidity</code> and <code>RemoveLiquidity</code>, indicates a liquidity provider adding or withdrawing liquidity to/from the exchange. In both cases, the events include the provider’s address (<code>provider</code>) and the amounts of ETH and ERC20 added or withdrawn (<code>eth_amount</code>, <code>token_amount</code>).</p>
+<p><code>Transfer</code> and <code>Approval</code> follow the ERC20 specification<sup class="footnote-reference"><a href="#erc20">2</a></sup>. </p>
+<pre><code class="language-python">name: public(bytes32)                             # Uniswap V1
+symbol: public(bytes32)                           # UNI-V1
+decimals: public(uint256)                         # 18
+totalSupply: public(uint256)                      # total number of UNI in existence
+balances: uint256[address]                        # UNI balance of an address
+allowances: (uint256[address])[address]           # UNI allowance of one address on another
+token: address(ERC20)                             # address of the ERC20 token traded on this contract
+factory: Factory                                  # interface for the factory that created this contract
+</code></pre>
+<p>Almost every state variable defined in the Exchange contract has to do with supporting the ERC20 specification.</p>
+<p>Because each Exchange (trading pair) mints its own ERC20 token to track liquidity contributions, obligations, and LP earnings, it follows that it must also be an ERC20 token. <code>name</code>, <code>symbol</code>, <code>decimals</code>, <code>totalSupply</code>, <code>balances</code>, and <code>allowances</code> all have to do with implementing that logic. </p>
+<p>The ERC20 token in question is known as the <em>LP Token of a pair</em> (and here, the developers have annotated it as the UNI token.)</p>
+<p><code>name</code> and <code>symbol</code> are supposed to be strings, but back in the old Vyper the separate string type didn’t exist; instead, we would store string data in fixed-size arrays, of which <code>bytes32</code>, a 32-byte array, is an instance<sup class="footnote-reference"><a href="#strings">3</a></sup>.</p>
+<p><code>decimals</code>, according to the ERC20 spec, is the number of decimal places to be used <em>for display purposes</em>. This value does not affect in-contract handling of token amounts, which are always expressed in <code>wei</code>, and defaults to <code>18</code>, which, as we will see shortly, the Exchange contract honors.</p>
+<p><code>totalSupply</code> is the amount of LP Token in existence. Since each Exchange instance mints and burns its own tokens, based on liquidity contributions and withdrawals, the value of <code>totalSupply</code> here is based strictly on these two operations. </p>
+<p><code>balances</code> maps liquidity provider addresses to amounts of LP Token they hold. <code>totalSupply</code> is expected to equal the sum of all balances both before and after a transaction operating on LP Token takes place.</p>
+<p><code>allowances</code> stores spending allowances for LP Token for any potential liquidity provider who might wish to allow a third party to spend tokens on their behalf.</p>
+<p><code>token</code> is as the comment indicates. </p>
+<p>NOTE. The type of <code>token</code> specializes on <code>ERC20</code> (interface), which is to say <code>token</code> is supposed to be an address of an ERC20 contract, but normally in a Vyper contract we’d see a prior <code>from vyper.interfaces import ERC20</code> declaration to make this possible. Exchange has no such declarations, and this is one of the mysteries of v1’s code. </p>
+<p><code>factory</code> is an interface for <code>Factory</code> and is going to point to the Factory that deployed this Exchange.
+This is used for what is now known as <em>swap routing</em>, i.e. achieving a swap by way of multiple Exchange hops,
+and for verification purposes.</p>
+<p>Note the variables not declared as <code>public</code> are private by default. </p>
+<p>NOTE. Mapping declarations of the form <code>_valueType[_keyType]</code> follow the syntax of the Vyper version used (<code>0.1.0b4</code>), but also <code>0.1.0b4</code> will error when compiling Uniswap v1 code. Same goes for <a href="./factory.html">Factory</a>, and I have been unable to solve this mystery so far. Please let me know if <em>you</em> know what’s up.</p>
+<h2 id="setup"><a class="header" href="#setup">setup</a></h2>
+<pre><code class="language-python"># @dev This function acts as a contract constructor which is not currently supported in contracts deployed
+#      using create_with_code_of(). It is called once by the factory during contract creation.
+@public
+def setup(token_addr: address):
+    assert (self.factory == ZERO_ADDRESS and self.token == ZERO_ADDRESS) and token_addr != ZERO_ADDRESS
+    self.factory = msg.sender
+    self.token = token_addr
+    self.name = 0x556e697377617020563100000000000000000000000000000000000000000000
+    self.symbol = 0x554e492d56310000000000000000000000000000000000000000000000000000
+    self.decimals = 18
+</code></pre>
+<p>Remember how we said <code>create_with_code_of</code> is misleading? It’s 2022, and calling constructors on proxies still isn’t anywhere to be seen (and we’re fine with that.)</p>
+<p>The first thing <code>setup</code> does is checks that the Exchange has not been initialized and so this is the first time <code>setup</code> is being executed on this instance of Exchange. Calling <code>setup</code> sets state variables <code>factory</code> and <code>token</code>, so if any of those isn’t the zero address, the function will revert. </p>
+<p>The address of the ERC20 that will be traded on the Exchange (<code>token_addr</code>) and is passed in as the only argument must, on the other hand, be non-zero.</p>
+<p>If the assert doesn’t fire, we:</p>
+<ul>
+<li>Set state variable <code>factory</code> to <code>msg.sender</code>, which is the caller’s address and in our case is the address of Factory.</li>
+<li>Set state variable <code>token</code> to <code>token_addr</code>. </li>
+<li>Set state variable <code>name</code> (the name of the LP Token) to 0x556e697377617020563100000000000000000000000000000000000000000000, which is another way of saying “Uniswap V1”.</li>
+<li>Set state variable <code>symbol</code> (the ticker of the LP Token) to 0x554e492d56310000000000000000000000000000000000000000000000000000, which translates to “UNI-V1”.</li>
+<li>Set state variable <code>decimals</code> (for the LP token) to 18. Every 1e18 wei of the LP Token will be displayed as <code>1</code> by wallets and token trackers.</li>
+</ul>
+<p>(Shout out to <a href="https://onlinestringtools.com/convert-bytes-to-string">Online String Tools</a> for making the conversion of <code>bytes32</code> to <code>string</code> trivial.)</p>
+<p>Like often happens with EVM, we ignore initialization for <code>totalSupply</code> as it is <code>0</code> by default. <code>balances</code> and <code>allowances</code> are “initialized” in a similar manner, which is great since we can’t know their values in advance anyway.</p>
+<h2 id="addliquidity"><a class="header" href="#addliquidity">addLiquidity</a></h2>
+<p>It’s easy to observe creating an Exchange (by calling <code>setup</code>) does not automatically make it functional. All <code>setup</code> does is configures an ETH/ERC20 pair. But to actually be able to swap ETH for ERC20 and back, someone needs to provide both ETH and ERC20 liquidity to the Exchange.</p>
+<p>This is where liquidity providers come in, and <code>addLiquidity</code> is the function that allows anyone to contribute liquidity to an existing Exchange. </p>
+<p>So once an Exchage is set up, how much of ETH and of the ERC20 token do you actually supply? </p>
+<p>Can you be a jerk about it and create an ETH/DAI pair where the reserve of ETH is 1e18 (1 ETH), and the reserve of DAI is 1e24 (10,000 DAI) and then just wait for someone to buy the 1 ETH for 10,000 DAI and withdraw liquidity afterwards, thus making a lump amount?</p>
+<p>Nope. The potential buyer will quickly realize how dim-witted your ruse is, and instead of buying the 1 ETH, they will buy the 10,000 DAI, only paying 1 ETH.</p>
+<p>// TODO: we can’t actually buy the entirety of one side of the reserves, can we? check</p>
+<p>Okay, then maybe we can set up an ETH/DAI pair where the reserve of ETH is 1e18 (1 ETH), and the reserve of DAI is 1 wei, then wait for someone to buy the 1 wei of DAI for 1 ETH?</p>
+<p>Nope. The someone will simply sell 1 wei of DAI to the Exchange and get 1 ETH back.</p>
+<p>Uniswap developers were wise enough to know their Automated Market Maker approach will force the initial liquidity contributor to go with the existing market exchange rates, unless, of course, they wanted to lose money.</p>
+<p>Once there is liquidity in an Exchange, adding more liquidity happens at the current exchange rate in that Exchange. And the rest is taken care of by the AMM algorithm, which we’ll get to later. For now, let’s dissect how <code>addLiquidity</code> works. </p>
+<p>(Also note here, if someone is stupid enough to attemp to piggyback your genius imbalanced exchange rate ruse, you will both lose liquidity.)</p>
+<pre><code class="language-python"># @notice Deposit ETH and Tokens (self.token) at current ratio to mint UNI tokens.
+# @dev min_liquidity does nothing when total UNI supply is 0.
+# @param min_liquidity Minimum number of UNI sender will mint if total UNI supply is greater than 0.
+# @param max_tokens Maximum number of tokens deposited. Deposits max amount if total UNI supply is 0.
+# @param deadline Time after which this transaction can no longer be executed.
+# @return The amount of UNI minted.
+@public
+@payable
+def addLiquidity(min_liquidity: uint256, max_tokens: uint256, deadline: timestamp) -&gt; uint256:
+    assert deadline &gt; block.timestamp and (max_tokens &gt; 0 and msg.value &gt; 0)
+    total_liquidity: uint256 = self.totalSupply
+    if total_liquidity &gt; 0:
+        assert min_liquidity &gt; 0
+        eth_reserve: uint256(wei) = self.balance - msg.value
+        token_reserve: uint256 = self.token.balanceOf(self)
+        token_amount: uint256 = msg.value * token_reserve / eth_reserve + 1
+        liquidity_minted: uint256 = msg.value * total_liquidity / eth_reserve
+        assert max_tokens &gt;= token_amount and liquidity_minted &gt;= min_liquidity
+        self.balances[msg.sender] += liquidity_minted
+        self.totalSupply = total_liquidity + liquidity_minted
+        assert self.token.transferFrom(msg.sender, self, token_amount)
+        log.AddLiquidity(msg.sender, msg.value, token_amount)
+        log.Transfer(ZERO_ADDRESS, msg.sender, liquidity_minted)
+        return liquidity_minted
+    else:
+        assert (self.factory != ZERO_ADDRESS and self.token != ZERO_ADDRESS) and msg.value &gt;= 1000000000
+        assert self.factory.getExchange(self.token) == self
+        token_amount: uint256 = max_tokens
+        initial_liquidity: uint256 = as_unitless_number(self.balance)
+        self.totalSupply = initial_liquidity
+        self.balances[msg.sender] = initial_liquidity
+        assert self.token.transferFrom(msg.sender, self, token_amount)
+        log.AddLiquidity(msg.sender, msg.value, token_amount)
+        log.Transfer(ZERO_ADDRESS, msg.sender, initial_liquidity)
+        return initial_liquidity
+</code></pre>
+<h3 id="arguments--return-value"><a class="header" href="#arguments--return-value">Arguments &amp; Return Value</a></h3>
+<p>In addition to the three explicit arguments (<code>min_liquidity</code>, <code>max_tokens</code>, and <code>deadline</code>), there’s an implicit one, and that’s the ETH amount transferred to the contract in a call to <code>addLiquidity</code>. To facilitate this, <code>addLiquidity</code> is declared <em>payable</em>  (note the <code>@payable</code> decorator), which means it will accept ETH amounts alongside function arguments.</p>
+<p><code>msg.value</code> is how we access this implicit argument, and its value equals the ETH amount transferred in the transaction.</p>
+<p><code>msg.value</code> or <em>ETH value</em> is one half (50%) of the total value added in an <code>addLiquidity</code> transaction, or at least it is expected to be. The other 50% of the value is added in the form of the ERC20 token.</p>
+<p>Since <em>ETH value</em> determines the contributed value, the amount of ERC20 token transferred to the Exchange in an <code>addLiquidity</code> transaction is based on <code>msg.value</code> and the current exchange rate. (Recall we said earlier that new liquidity is always added at the current exchange rate.)</p>
+<p>Now, EVM networks are designed in such a way that submitted transactions first go into <strong>mempool</strong>, and then, after a hopefully short period of time, get included in a mined block. Consequently, there’s normally a time gap between the moment when a transaction is submitted and the moment when it’s processed. Plus, other transactions will get processed earlier.</p>
+<p>So by the moment an <code>addLiquidity</code> transaction is executed and included in a mined block the exchange rate could change.</p>
+<p>This is known as <strong>slippage</strong>. To avoid suffering too large a slippage, the caller of <code>addLiquidity</code> can cap the amount of ERC20 token deducted from their account via the <code>max_tokens</code> argument. (All of this obviously doesn’t apply to a newly created Exchange that has no liquidity yet. “<em>For the first liquidity provider, max_tokens is the exact amount of tokens deposited.</em>”)</p>
+<div id="admonition-danger" class="admonition danger">
+<div class="admonition-title">
+<p>Danger</p>
+<p><a class="admonition-anchor-link" href="#admonition-danger"></a></p>
+</div>
+<div>
+<p><code>min_liquidity</code> is somewhat obscure. The documentation for V1 states, <em>“</em><code>min_liquidity</code> <em>is used in combination with</em> <code>max_tokens</code> <em>and</em> <code>ethAmount</code> <em>to bound the rate at which liquidity tokens are minted. For the first liquidity provider, min_liquidity does not do anything and can be set to 0.”</em></p>
+<p>This descriptions makes absolute sense for the first liquidity provider, but it doesn’t make a whole lot of sense for the ones that follow. Why on Earth would you want to bound the rate at which liquidity tokens are minted when the LP Tokens generation is deterministic?</p>
+<p>What it does look like is like another mechanism to control slippage, where along with tracking the price fluctuations you track fluctuations of your potential share in a liquidity pool and you don’t commit to provide liquidity unless you get a certain share. Knowledgeable folks, correct me if this is inaccurate.</p>
+</div>
+</div>
+<p><code>deadline</code> sets a time after which a transaction can no longer be executed. Per V1 documentation, “<em>This limits the “free option” problem, where Ethereum miners can hold signed transactions and execute them based off market movements</em>“. </p>
+<p>Note the type of <code>deadline</code>: <code>timestamp</code>. Another strong typing artifact which didn’t survive to our days. </p>
+<p><code>min_liquidity</code>
+: uint256, max_tokens: uint256</p>
+<p><code>Return Value</code>: The amount of LP Token minted.</p>
+<p>The ethAmount sent to addLiquidity is the exact amount of ETH that will be deposited into the liquidity reserves. It should be 50% of the total value a liquidity provider wishes to deposit into the reserves.</p>
+<p>Since liquidity providers must deposit at the current exchange rate, the Uniswap smart contracts use ethAmount to determine the amount of ERC20 tokens that must be deposited. This token amount is the remaining 50% of total value a liquidity provider wishes to deposit. Since exchange rate can change between when a transaction is signed and when it is executed on Ethereum, max_tokens is used to bound the amount this rate can fluctuate. For the first liquidity provider, max_tokens is the exact amount of tokens deposited.</p>
+<h3 id="general-logic"><a class="header" href="#general-logic">General Logic</a></h3>
+<p>Second, it will always attempt to do three main things (in addition to several minor ones):</p>
+<ol>
+<li>Ensure that the deadline for adding liquidity set by the caller hasn’t passed</li>
+<li>Update ETH and ERC20 token reserves</li>
+<li>Mint LP Token to the liquidity provider based on their share of liquidity in the pool</li>
+</ol>
+<p>As stated earlier, there are two scenarios for adding liquidity:</p>
+<ol>
+<li>The Exchange has no liquidity yet; and</li>
+<li>The Exchange has liquidity.</li>
+</ol>
+<pre><code class="language-python"># @dev Burn UNI tokens to withdraw ETH and Tokens at current ratio.
+# @param amount Amount of UNI burned.
+# @param min_eth Minimum ETH withdrawn.
+# @param min_tokens Minimum Tokens withdrawn.
+# @param deadline Time after which this transaction can no longer be executed.
+# @return The amount of ETH and Tokens withdrawn.
+@public
+def removeLiquidity(amount: uint256, min_eth: uint256(wei), min_tokens: uint256, deadline: timestamp) -&gt; (uint256(wei), uint256):
+    assert (amount &gt; 0 and deadline &gt; block.timestamp) and (min_eth &gt; 0 and min_tokens &gt; 0)
+    total_liquidity: uint256 = self.totalSupply
+    assert total_liquidity &gt; 0
+    token_reserve: uint256 = self.token.balanceOf(self)
+    eth_amount: uint256(wei) = amount * self.balance / total_liquidity
+    token_amount: uint256 = amount * token_reserve / total_liquidity
+    assert eth_amount &gt;= min_eth and token_amount &gt;= min_tokens
+    self.balances[msg.sender] -= amount
+    self.totalSupply = total_liquidity - amount
+    send(msg.sender, eth_amount)
+    assert self.token.transfer(msg.sender, token_amount)
+    log.RemoveLiquidity(msg.sender, eth_amount, token_amount)
+    log.Transfer(msg.sender, ZERO_ADDRESS, amount)
+    return eth_amount, token_amount
+</code></pre>
+<pre><code class="language-python"># @dev Pricing function for converting between ETH and Tokens.
+# @param input_amount Amount of ETH or Tokens being sold.
+# @param input_reserve Amount of ETH or Tokens (input type) in exchange reserves.
+# @param output_reserve Amount of ETH or Tokens (output type) in exchange reserves.
+# @return Amount of ETH or Tokens bought.
+@private
+@constant
+def getInputPrice(input_amount: uint256, input_reserve: uint256, output_reserve: uint256) -&gt; uint256:
+    assert input_reserve &gt; 0 and output_reserve &gt; 0
+    input_amount_with_fee: uint256 = input_amount * 997
+    numerator: uint256 = input_amount_with_fee * output_reserve
+    denominator: uint256 = (input_reserve * 1000) + input_amount_with_fee
+    return numerator / denominator
+</code></pre>
+<pre><code class="language-python"># @dev Pricing function for converting between ETH and Tokens.
+# @param output_amount Amount of ETH or Tokens being bought.
+# @param input_reserve Amount of ETH or Tokens (input type) in exchange reserves.
+# @param output_reserve Amount of ETH or Tokens (output type) in exchange reserves.
+# @return Amount of ETH or Tokens sold.
+@private
+@constant
+def getOutputPrice(output_amount: uint256, input_reserve: uint256, output_reserve: uint256) -&gt; uint256:
+    assert input_reserve &gt; 0 and output_reserve &gt; 0
+    numerator: uint256 = input_reserve * output_amount * 1000
+    denominator: uint256 = (output_reserve - output_amount) * 997
+    return numerator / denominator + 1
+</code></pre>
+<pre><code class="language-python">@private
+def ethToTokenInput(eth_sold: uint256(wei), min_tokens: uint256, deadline: timestamp, buyer: address, recipient: address) -&gt; uint256:
+    assert deadline &gt;= block.timestamp and (eth_sold &gt; 0 and min_tokens &gt; 0)
+    token_reserve: uint256 = self.token.balanceOf(self)
+    tokens_bought: uint256 = self.getInputPrice(as_unitless_number(eth_sold), as_unitless_number(self.balance - eth_sold), token_reserve)
+    assert tokens_bought &gt;= min_tokens
+    assert self.token.transfer(recipient, tokens_bought)
+    log.TokenPurchase(buyer, eth_sold, tokens_bought)
+    return tokens_bought
+</code></pre>
+<pre><code class="language-python"># @notice Convert ETH to Tokens.
+# @dev User specifies exact input (msg.value).
+# @dev User cannot specify minimum output or deadline.
+@public
+@payable
+def __default__():
+    self.ethToTokenInput(msg.value, 1, block.timestamp, msg.sender, msg.sender)
+</code></pre>
+<pre><code class="language-python"># @notice Convert ETH to Tokens.
+# @dev User specifies exact input (msg.value) and minimum output.
+# @param min_tokens Minimum Tokens bought.
+# @param deadline Time after which this transaction can no longer be executed.
+# @return Amount of Tokens bought.
+@public
+@payable
+def ethToTokenSwapInput(min_tokens: uint256, deadline: timestamp) -&gt; uint256:
+    return self.ethToTokenInput(msg.value, min_tokens, deadline, msg.sender, msg.sender)
+</code></pre>
+<pre><code class="language-python"># @notice Convert ETH to Tokens and transfers Tokens to recipient.
+# @dev User specifies exact input (msg.value) and minimum output
+# @param min_tokens Minimum Tokens bought.
+# @param deadline Time after which this transaction can no longer be executed.
+# @param recipient The address that receives output Tokens.
+# @return Amount of Tokens bought.
+@public
+@payable
+def ethToTokenTransferInput(min_tokens: uint256, deadline: timestamp, recipient: address) -&gt; uint256:
+    assert recipient != self and recipient != ZERO_ADDRESS
+    return self.ethToTokenInput(msg.value, min_tokens, deadline, msg.sender, recipient)
+</code></pre>
+<pre><code class="language-python">@private
+def ethToTokenOutput(tokens_bought: uint256, max_eth: uint256(wei), deadline: timestamp, buyer: address, recipient: address) -&gt; uint256(wei):
+    assert deadline &gt;= block.timestamp and (tokens_bought &gt; 0 and max_eth &gt; 0)
+    token_reserve: uint256 = self.token.balanceOf(self)
+    eth_sold: uint256 = self.getOutputPrice(tokens_bought, as_unitless_number(self.balance - max_eth), token_reserve)
+    # Throws if eth_sold &gt; max_eth
+    eth_refund: uint256(wei) = max_eth - as_wei_value(eth_sold, 'wei')
+    if eth_refund &gt; 0:
+        send(buyer, eth_refund)
+    assert self.token.transfer(recipient, tokens_bought)
+    log.TokenPurchase(buyer, as_wei_value(eth_sold, 'wei'), tokens_bought)
+    return as_wei_value(eth_sold, 'wei')
+</code></pre>
+<pre><code class="language-python"># @notice Convert ETH to Tokens.
+# @dev User specifies maximum input (msg.value) and exact output.
+# @param tokens_bought Amount of tokens bought.
+# @param deadline Time after which this transaction can no longer be executed.
+# @return Amount of ETH sold.
+@public
+@payable
+def ethToTokenSwapOutput(tokens_bought: uint256, deadline: timestamp) -&gt; uint256(wei):
+    return self.ethToTokenOutput(tokens_bought, msg.value, deadline, msg.sender, msg.sender)
+</code></pre>
+<pre><code class="language-python"># @notice Convert ETH to Tokens and transfers Tokens to recipient.
+# @dev User specifies maximum input (msg.value) and exact output.
+# @param tokens_bought Amount of tokens bought.
+# @param deadline Time after which this transaction can no longer be executed.
+# @param recipient The address that receives output Tokens.
+# @return Amount of ETH sold.
+@public
+@payable
+def ethToTokenTransferOutput(tokens_bought: uint256, deadline: timestamp, recipient: address) -&gt; uint256(wei):
+    assert recipient != self and recipient != ZERO_ADDRESS
+    return self.ethToTokenOutput(tokens_bought, msg.value, deadline, msg.sender, recipient)
+</code></pre>
+<pre><code class="language-python">@private
+def tokenToEthInput(tokens_sold: uint256, min_eth: uint256(wei), deadline: timestamp, buyer: address, recipient: address) -&gt; uint256(wei):
+    assert deadline &gt;= block.timestamp and (tokens_sold &gt; 0 and min_eth &gt; 0)
+    token_reserve: uint256 = self.token.balanceOf(self)
+    eth_bought: uint256 = self.getInputPrice(tokens_sold, token_reserve, as_unitless_number(self.balance))
+    wei_bought: uint256(wei) = as_wei_value(eth_bought, 'wei')
+    assert wei_bought &gt;= min_eth
+    send(recipient, wei_bought)
+    assert self.token.transferFrom(buyer, self, tokens_sold)
+    log.EthPurchase(buyer, tokens_sold, wei_bought)
+    return wei_bought
+</code></pre>
+<pre><code class="language-python"># @notice Convert Tokens to ETH.
+# @dev User specifies exact input and minimum output.
+# @param tokens_sold Amount of Tokens sold.
+# @param min_eth Minimum ETH purchased.
+# @param deadline Time after which this transaction can no longer be executed.
+# @return Amount of ETH bought.
+@public
+def tokenToEthSwapInput(tokens_sold: uint256, min_eth: uint256(wei), deadline: timestamp) -&gt; uint256(wei):
+    return self.tokenToEthInput(tokens_sold, min_eth, deadline, msg.sender, msg.sender)
+</code></pre>
+<pre><code class="language-python"># @notice Convert Tokens to ETH and transfers ETH to recipient.
+# @dev User specifies exact input and minimum output.
+# @param tokens_sold Amount of Tokens sold.
+# @param min_eth Minimum ETH purchased.
+# @param deadline Time after which this transaction can no longer be executed.
+# @param recipient The address that receives output ETH.
+# @return Amount of ETH bought.
+@public
+def tokenToEthTransferInput(tokens_sold: uint256, min_eth: uint256(wei), deadline: timestamp, recipient: address) -&gt; uint256(wei):
+    assert recipient != self and recipient != ZERO_ADDRESS
+    return self.tokenToEthInput(tokens_sold, min_eth, deadline, msg.sender, recipient)
+</code></pre>
+<pre><code class="language-python">@private
+def tokenToEthOutput(eth_bought: uint256(wei), max_tokens: uint256, deadline: timestamp, buyer: address, recipient: address) -&gt; uint256:
+    assert deadline &gt;= block.timestamp and eth_bought &gt; 0
+    token_reserve: uint256 = self.token.balanceOf(self)
+    tokens_sold: uint256 = self.getOutputPrice(as_unitless_number(eth_bought), token_reserve, as_unitless_number(self.balance))
+    # tokens sold is always &gt; 0
+    assert max_tokens &gt;= tokens_sold
+    send(recipient, eth_bought)
+    assert self.token.transferFrom(buyer, self, tokens_sold)
+    log.EthPurchase(buyer, tokens_sold, eth_bought)
+    return tokens_sold
+</code></pre>
+<pre><code class="language-python"># @notice Convert Tokens to ETH.
+# @dev User specifies maximum input and exact output.
+# @param eth_bought Amount of ETH purchased.
+# @param max_tokens Maximum Tokens sold.
+# @param deadline Time after which this transaction can no longer be executed.
+# @return Amount of Tokens sold.
+@public
+def tokenToEthSwapOutput(eth_bought: uint256(wei), max_tokens: uint256, deadline: timestamp) -&gt; uint256:
+    return self.tokenToEthOutput(eth_bought, max_tokens, deadline, msg.sender, msg.sender)
+</code></pre>
+<pre><code class="language-python"># @notice Convert Tokens to ETH and transfers ETH to recipient.
+# @dev User specifies maximum input and exact output.
+# @param eth_bought Amount of ETH purchased.
+# @param max_tokens Maximum Tokens sold.
+# @param deadline Time after which this transaction can no longer be executed.
+# @param recipient The address that receives output ETH.
+# @return Amount of Tokens sold.
+@public
+def tokenToEthTransferOutput(eth_bought: uint256(wei), max_tokens: uint256, deadline: timestamp, recipient: address) -&gt; uint256:
+    assert recipient != self and recipient != ZERO_ADDRESS
+    return self.tokenToEthOutput(eth_bought, max_tokens, deadline, msg.sender, recipient)
+</code></pre>
+<pre><code class="language-python">@private
+def tokenToTokenInput(tokens_sold: uint256, min_tokens_bought: uint256, min_eth_bought: uint256(wei), deadline: timestamp, buyer: address, recipient: address, exchange_addr: address) -&gt; uint256:
+    assert (deadline &gt;= block.timestamp and tokens_sold &gt; 0) and (min_tokens_bought &gt; 0 and min_eth_bought &gt; 0)
+    assert exchange_addr != self and exchange_addr != ZERO_ADDRESS
+    token_reserve: uint256 = self.token.balanceOf(self)
+    eth_bought: uint256 = self.getInputPrice(tokens_sold, token_reserve, as_unitless_number(self.balance))
+    wei_bought: uint256(wei) = as_wei_value(eth_bought, 'wei')
+    assert wei_bought &gt;= min_eth_bought
+    assert self.token.transferFrom(buyer, self, tokens_sold)
+    tokens_bought: uint256 = Exchange(exchange_addr).ethToTokenTransferInput(min_tokens_bought, deadline, recipient, value=wei_bought)
+    log.EthPurchase(buyer, tokens_sold, wei_bought)
+    return tokens_bought
+</code></pre>
+<pre><code class="language-python"># @notice Convert Tokens (self.token) to Tokens (token_addr).
+# @dev User specifies exact input and minimum output.
+# @param tokens_sold Amount of Tokens sold.
+# @param min_tokens_bought Minimum Tokens (token_addr) purchased.
+# @param min_eth_bought Minimum ETH purchased as intermediary.
+# @param deadline Time after which this transaction can no longer be executed.
+# @param token_addr The address of the token being purchased.
+# @return Amount of Tokens (token_addr) bought.
+@public
+def tokenToTokenSwapInput(tokens_sold: uint256, min_tokens_bought: uint256, min_eth_bought: uint256(wei), deadline: timestamp, token_addr: address) -&gt; uint256:
+    exchange_addr: address = self.factory.getExchange(token_addr)
+    return self.tokenToTokenInput(tokens_sold, min_tokens_bought, min_eth_bought, deadline, msg.sender, msg.sender, exchange_addr)
+</code></pre>
+<pre><code class="language-python"># @notice Convert Tokens (self.token) to Tokens (token_addr) and transfers
+#         Tokens (token_addr) to recipient.
+# @dev User specifies exact input and minimum output.
+# @param tokens_sold Amount of Tokens sold.
+# @param min_tokens_bought Minimum Tokens (token_addr) purchased.
+# @param min_eth_bought Minimum ETH purchased as intermediary.
+# @param deadline Time after which this transaction can no longer be executed.
+# @param recipient The address that receives output ETH.
+# @param token_addr The address of the token being purchased.
+# @return Amount of Tokens (token_addr) bought.
+@public
+def tokenToTokenTransferInput(tokens_sold: uint256, min_tokens_bought: uint256, min_eth_bought: uint256(wei), deadline: timestamp, recipient: address, token_addr: address) -&gt; uint256:
+    exchange_addr: address = self.factory.getExchange(token_addr)
+    return self.tokenToTokenInput(tokens_sold, min_tokens_bought, min_eth_bought, deadline, msg.sender, recipient, exchange_addr)
+</code></pre>
+<pre><code class="language-python">@private
+def tokenToTokenOutput(tokens_bought: uint256, max_tokens_sold: uint256, max_eth_sold: uint256(wei), deadline: timestamp, buyer: address, recipient: address, exchange_addr: address) -&gt; uint256:
+    assert deadline &gt;= block.timestamp and (tokens_bought &gt; 0 and max_eth_sold &gt; 0)
+    assert exchange_addr != self and exchange_addr != ZERO_ADDRESS
+    eth_bought: uint256(wei) = Exchange(exchange_addr).getEthToTokenOutputPrice(tokens_bought)
+    token_reserve: uint256 = self.token.balanceOf(self)
+    tokens_sold: uint256 = self.getOutputPrice(as_unitless_number(eth_bought), token_reserve, as_unitless_number(self.balance))
+    # tokens sold is always &gt; 0
+    assert max_tokens_sold &gt;= tokens_sold and max_eth_sold &gt;= eth_bought
+    assert self.token.transferFrom(buyer, self, tokens_sold)
+    eth_sold: uint256(wei) = Exchange(exchange_addr).ethToTokenTransferOutput(tokens_bought, deadline, recipient, value=eth_bought)
+    log.EthPurchase(buyer, tokens_sold, eth_bought)
+    return tokens_sold
+</code></pre>
+<pre><code class="language-python"># @notice Convert Tokens (self.token) to Tokens (token_addr).
+# @dev User specifies maximum input and exact output.
+# @param tokens_bought Amount of Tokens (token_addr) bought.
+# @param max_tokens_sold Maximum Tokens (self.token) sold.
+# @param max_eth_sold Maximum ETH purchased as intermediary.
+# @param deadline Time after which this transaction can no longer be executed.
+# @param token_addr The address of the token being purchased.
+# @return Amount of Tokens (self.token) sold.
+@public
+def tokenToTokenSwapOutput(tokens_bought: uint256, max_tokens_sold: uint256, max_eth_sold: uint256(wei), deadline: timestamp, token_addr: address) -&gt; uint256:
+    exchange_addr: address = self.factory.getExchange(token_addr)
+    return self.tokenToTokenOutput(tokens_bought, max_tokens_sold, max_eth_sold, deadline, msg.sender, msg.sender, exchange_addr)
+</code></pre>
+<pre><code class="language-python"># @notice Convert Tokens (self.token) to Tokens (token_addr) and transfers
+#         Tokens (token_addr) to recipient.
+# @dev User specifies maximum input and exact output.
+# @param tokens_bought Amount of Tokens (token_addr) bought.
+# @param max_tokens_sold Maximum Tokens (self.token) sold.
+# @param max_eth_sold Maximum ETH purchased as intermediary.
+# @param deadline Time after which this transaction can no longer be executed.
+# @param recipient The address that receives output ETH.
+# @param token_addr The address of the token being purchased.
+# @return Amount of Tokens (self.token) sold.
+@public
+def tokenToTokenTransferOutput(tokens_bought: uint256, max_tokens_sold: uint256, max_eth_sold: uint256(wei), deadline: timestamp, recipient: address, token_addr: address) -&gt; uint256:
+    exchange_addr: address = self.factory.getExchange(token_addr)
+    return self.tokenToTokenOutput(tokens_bought, max_tokens_sold, max_eth_sold, deadline, msg.sender, recipient, exchange_addr)
+</code></pre>
+<pre><code class="language-python"># @notice Convert Tokens (self.token) to Tokens (exchange_addr.token).
+# @dev Allows trades through contracts that were not deployed from the same factory.
+# @dev User specifies exact input and minimum output.
+# @param tokens_sold Amount of Tokens sold.
+# @param min_tokens_bought Minimum Tokens (token_addr) purchased.
+# @param min_eth_bought Minimum ETH purchased as intermediary.
+# @param deadline Time after which this transaction can no longer be executed.
+# @param exchange_addr The address of the exchange for the token being purchased.
+# @return Amount of Tokens (exchange_addr.token) bought.
+@public
+def tokenToExchangeSwapInput(tokens_sold: uint256, min_tokens_bought: uint256, min_eth_bought: uint256(wei), deadline: timestamp, exchange_addr: address) -&gt; uint256:
+    return self.tokenToTokenInput(tokens_sold, min_tokens_bought, min_eth_bought, deadline, msg.sender, msg.sender, exchange_addr)
+</code></pre>
+<pre><code class="language-python"># @notice Convert Tokens (self.token) to Tokens (exchange_addr.token) and transfers
+#         Tokens (exchange_addr.token) to recipient.
+# @dev Allows trades through contracts that were not deployed from the same factory.
+# @dev User specifies exact input and minimum output.
+# @param tokens_sold Amount of Tokens sold.
+# @param min_tokens_bought Minimum Tokens (token_addr) purchased.
+# @param min_eth_bought Minimum ETH purchased as intermediary.
+# @param deadline Time after which this transaction can no longer be executed.
+# @param recipient The address that receives output ETH.
+# @param exchange_addr The address of the exchange for the token being purchased.
+# @return Amount of Tokens (exchange_addr.token) bought.
+@public
+def tokenToExchangeTransferInput(tokens_sold: uint256, min_tokens_bought: uint256, min_eth_bought: uint256(wei), deadline: timestamp, recipient: address, exchange_addr: address) -&gt; uint256:
+    assert recipient != self
+    return self.tokenToTokenInput(tokens_sold, min_tokens_bought, min_eth_bought, deadline, msg.sender, recipient, exchange_addr)
+</code></pre>
+<pre><code class="language-python"># @notice Convert Tokens (self.token) to Tokens (exchange_addr.token).
+# @dev Allows trades through contracts that were not deployed from the same factory.
+# @dev User specifies maximum input and exact output.
+# @param tokens_bought Amount of Tokens (token_addr) bought.
+# @param max_tokens_sold Maximum Tokens (self.token) sold.
+# @param max_eth_sold Maximum ETH purchased as intermediary.
+# @param deadline Time after which this transaction can no longer be executed.
+# @param exchange_addr The address of the exchange for the token being purchased.
+# @return Amount of Tokens (self.token) sold.
+@public
+def tokenToExchangeSwapOutput(tokens_bought: uint256, max_tokens_sold: uint256, max_eth_sold: uint256(wei), deadline: timestamp, exchange_addr: address) -&gt; uint256:
+    return self.tokenToTokenOutput(tokens_bought, max_tokens_sold, max_eth_sold, deadline, msg.sender, msg.sender, exchange_addr)
+</code></pre>
+<pre><code class="language-python"># @notice Convert Tokens (self.token) to Tokens (exchange_addr.token) and transfers
+#         Tokens (exchange_addr.token) to recipient.
+# @dev Allows trades through contracts that were not deployed from the same factory.
+# @dev User specifies maximum input and exact output.
+# @param tokens_bought Amount of Tokens (token_addr) bought.
+# @param max_tokens_sold Maximum Tokens (self.token) sold.
+# @param max_eth_sold Maximum ETH purchased as intermediary.
+# @param deadline Time after which this transaction can no longer be executed.
+# @param recipient The address that receives output ETH.
+# @param token_addr The address of the token being purchased.
+# @return Amount of Tokens (self.token) sold.
+@public
+def tokenToExchangeTransferOutput(tokens_bought: uint256, max_tokens_sold: uint256, max_eth_sold: uint256(wei), deadline: timestamp, recipient: address, exchange_addr: address) -&gt; uint256:
+    assert recipient != self
+    return self.tokenToTokenOutput(tokens_bought, max_tokens_sold, max_eth_sold, deadline, msg.sender, recipient, exchange_addr)
+</code></pre>
+<pre><code class="language-python"># @notice Public price function for ETH to Token trades with an exact input.
+# @param eth_sold Amount of ETH sold.
+# @return Amount of Tokens that can be bought with input ETH.
+@public
+@constant
+def getEthToTokenInputPrice(eth_sold: uint256(wei)) -&gt; uint256:
+    assert eth_sold &gt; 0
+    token_reserve: uint256 = self.token.balanceOf(self)
+    return self.getInputPrice(as_unitless_number(eth_sold), as_unitless_number(self.balance), token_reserve)
+</code></pre>
+<pre><code class="language-python"># @notice Public price function for ETH to Token trades with an exact output.
+# @param tokens_bought Amount of Tokens bought.
+# @return Amount of ETH needed to buy output Tokens.
+@public
+@constant
+def getEthToTokenOutputPrice(tokens_bought: uint256) -&gt; uint256(wei):
+    assert tokens_bought &gt; 0
+    token_reserve: uint256 = self.token.balanceOf(self)
+    eth_sold: uint256 = self.getOutputPrice(tokens_bought, as_unitless_number(self.balance), token_reserve)
+    return as_wei_value(eth_sold, 'wei')
+</code></pre>
+<pre><code class="language-python"># @notice Public price function for Token to ETH trades with an exact input.
+# @param tokens_sold Amount of Tokens sold.
+# @return Amount of ETH that can be bought with input Tokens.
+@public
+@constant
+def getTokenToEthInputPrice(tokens_sold: uint256) -&gt; uint256(wei):
+    assert tokens_sold &gt; 0
+    token_reserve: uint256 = self.token.balanceOf(self)
+    eth_bought: uint256 = self.getInputPrice(tokens_sold, token_reserve, as_unitless_number(self.balance))
+    return as_wei_value(eth_bought, 'wei')
+</code></pre>
+<pre><code class="language-python"># @notice Public price function for Token to ETH trades with an exact output.
+# @param eth_bought Amount of output ETH.
+# @return Amount of Tokens needed to buy output ETH.
+@public
+@constant
+def getTokenToEthOutputPrice(eth_bought: uint256(wei)) -&gt; uint256:
+    assert eth_bought &gt; 0
+    token_reserve: uint256 = self.token.balanceOf(self)
+    return self.getOutputPrice(as_unitless_number(eth_bought), token_reserve, as_unitless_number(self.balance))
+</code></pre>
+<pre><code class="language-python"># @return Address of Token that is sold on this exchange.
+@public
+@constant
+def tokenAddress() -&gt; address:
+    return self.token
+</code></pre>
+<pre><code class="language-python"># @return Address of factory that created this exchange.
+@public
+@constant
+def factoryAddress() -&gt; address(Factory):
+    return self.factory
+</code></pre>
+<pre><code class="language-python"># ERC20 compatibility for exchange liquidity modified from
+# https://github.com/ethereum/vyper/blob/master/examples/tokens/ERC20.vy
+@public
+@constant
+def balanceOf(_owner : address) -&gt; uint256:
+    return self.balances[_owner]
+</code></pre>
+<pre><code class="language-python">@public
+def transfer(_to : address, _value : uint256) -&gt; bool:
+    self.balances[msg.sender] -= _value
+    self.balances[_to] += _value
+    log.Transfer(msg.sender, _to, _value)
+    return True
+</code></pre>
+<pre><code class="language-python">@public
+def transferFrom(_from : address, _to : address, _value : uint256) -&gt; bool:
+    self.balances[_from] -= _value
+    self.balances[_to] += _value
+    self.allowances[_from][msg.sender] -= _value
+    log.Transfer(_from, _to, _value)
+    return True
+</code></pre>
+<pre><code class="language-python">@public
+def approve(_spender : address, _value : uint256) -&gt; bool:
+    self.allowances[msg.sender][_spender] = _value
+    log.Approval(msg.sender, _spender, _value)
+    return True
+</code></pre>
+<pre><code class="language-python">@public
+@constant
+def allowance(_owner : address, _spender : address) -&gt; uint256:
+    return self.allowances[_owner][_spender]
+</code></pre>
+<div class="footnote-definition" id="erc20"><sup class="footnote-definition-label">2</sup>
+<p><a href="https://eips.ethereum.org/EIPS/eip-20">https://eips.ethereum.org/EIPS/eip-20</a>
+<sup class="footnote-reference"><a href="#unittypes">1</a></sup> <a href="https://vyper.readthedocs.io/en/v0.1.0-beta.4/types.html#unit-types">Vyper: Unit Types</a>
+<sup class="footnote-reference"><a href="#strings">3</a></sup> <a href="https://vyper.readthedocs.io/en/v0.1.0-beta.4/types.html#strings">Vyper: Strings</a></p>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../UniswapV1/factory.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../UniswapV1/factory.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>
