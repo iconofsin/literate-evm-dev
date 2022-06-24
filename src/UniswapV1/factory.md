@@ -2,13 +2,16 @@
 
 Uniswap v1 Factory ([Github](https://github.com/Uniswap/v1-contracts/blob/master/contracts/uniswap_factory.vy))
 
+NB: Uniswap v1 Factory was compiled and deployed ([Etherscan.io](https://etherscan.io/address/0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95), [tx](https://etherscan.io/tx/0xc1b2646d0ad4a3a151ebdaaa7ef72e3ab1aa13aa49d0b7a3ca020f5ee7b1b010)) using Vyper [v0.1.0b4](https://vyper.readthedocs.io/en/v0.1.0-beta.4/), which is *old*, no matter how you slice it. Consequently, the syntax of the language used at the time differs considerably from what you'll see in the later versions of Vyper.
+
+
 
 ```python
 contract Exchange():
     def setup(token_addr: address): modifying
 ```
 
-Prior to Vyper v0.2.1, which was a major breaking release ([v0.2.1 Release Notes](https://vyper.readthedocs.io/en/stable/release-notes.html#v0-2-1)), Vyper contracts used the keyword `contract` to declare interfaces for interacting with other contracts, instead of the now more familiar `interface`.
+Prior to Vyper v0.2.1, which was a major breaking release[^vyper], Vyper contracts used the keyword `contract` to declare interfaces for interacting with other contracts, instead of the now more familiar `interface`.
 
 Factory uses the `setup` function of each deployed Exchange contract to configure the ERC20 asset. `setup` takes a single argument, which is the address of the ERC20 token. `setup` doesn't return any values, and it will modify the state of the Exchange instance.
 
@@ -16,8 +19,7 @@ Factory uses the `setup` function of each deployed Exchange contract to configur
 NewExchange: event({token: indexed(address), exchange: indexed(address)})
 ```
 
-Factory emits the `NewExchange` event every time an Exchange is created; this is consistent with the practice of informing off-chain dApp counterparts about important state changes of the on-chain system. `NewExchange` records two pieces of information: the address of the ERC20 token in the pair (`token`) and the address of the Exchange contract deployed for the pair (`exchange`.)
-
+Factory emits the `NewExchange` event[^events] every time an Exchange is created; this is consistent with the practice of informing off-chain dApp counterparts about important state changes of the on-chain system. `NewExchange` records two pieces of information: the address of the ERC20 token in the pair (`token`) and the address of the Exchange contract deployed for the pair (`exchange`.) 
 
 ```python
 exchangeTemplate: public(address)
@@ -27,9 +29,9 @@ exchange_to_token: address[address]
 id_to_token: address[uint256]
 ```
 
-State variables are declared next. 
+State variables[^statevars] are declared next. 
 
-`exchangeTemplate` is a public variable that stores the address of the Exchange contract deployed during Factory initialization. This "on-chain template" is used by Factory to deploy Exchanges at run-time by deploying a minimal proxy using the code of the contract already deployed for its logic.
+`exchangeTemplate` is a public[^public] variable that stores the address[^address] of the Exchange contract deployed during Factory initialization. This "on-chain template" is used by Factory to deploy Exchanges at run-time by deploying a minimal proxy using the code of the contract already deployed for its logic.
 
 `tokenCount` is a public variable the stores the number of ERC20 tokens for which Exchanges have been deployed. 
 
@@ -38,6 +40,8 @@ State variables are declared next.
 `exchange_to_token` is a mapping to resolve Exchange addresses to ERC20 token addresses.
 
 `id_to_token` is a mapping to resolve ERC20 token identities (serial numbers as defined by the `tokenCount` counter) to ERC20 token addresses.
+
+NOTE. Mapping declarations of the form `_valueType[_keyType]` follow the syntax of the Vyper version used (`0.1.0b4`), but also `0.1.0b4` will error when compiling Uniswap v1 code. Same goes for [Exchange](./exchange.md), and I have been unable to solve this mystery so far. Please let me know if _you_ know what's up. 
 
 ```python
 @public
@@ -55,6 +59,7 @@ The two `assert` statements check that
 
 If both conditions hold, `self.exchangeTemplate = template` sets Factory's `exchangeTemplate` to the address of the deployed Exchange contract.
 
+[This is the original transaction](https://etherscan.io/tx/0x4ef102aebb98c3185396578bcf6f71d0c3c13773caef02514639b9141948245b) that initialized the factory. Visit the [Exchange](./exchange.md) section for relevant info on the transaction that deployed the template.
 
 ```python
 @public
@@ -78,7 +83,7 @@ def createExchange(token: address) -> address:
 The three `assert` statements check that:
 1. The `token` address is not zero
 2. The template has been initialized
-3. The Exchange for this particular ERC20 has not yet been created (see [Overview]()./index.md)
+3. The Exchange for this particular ERC20 has not yet been created (see [Overview](./index.md))
 
 `exchange: address = create_with_code_of(self.exchangeTemplate)` deploys a [minimal proxy contract](https://blog.openzeppelin.com/deep-dive-into-the-minimal-proxy-contract/) pointing to the deployed Exchange contract. The name `create_with_code_of` was a misleading one; it didn't actually copy the code of a deployed contract. For this reason, the call was later renamed by the Vyper team to [`create_forwarder_to`](https://vyper.readthedocs.io/en/stable/built-in-functions.html?highlight=create_minimal_proxy#chain-interaction).
 
@@ -130,3 +135,17 @@ def getTokenWithId(token_id: uint256) -> address:
 ```
 
 Returns the ERC20 token address based on its identity (serial number).
+
+### References
+
+[^vyper]: [Vyper v0.2.1 Release Notes](https://vyper.readthedocs.io/en/stable/release-notes.html#v0-2-1)
+
+[^events]: [Vyper: Event Logging](https://vyper.readthedocs.io/en/v0.1.0-beta.4/logging.html)
+
+[^statevars]: [Vyper: State Variables](https://vyper.readthedocs.io/en/v0.1.0-beta.4/structure-of-a-contract.html#state-variables)
+
+[^address]: [Vyper: Address Type](https://vyper.readthedocs.io/en/v0.1.0-beta.4/types.html#id12)
+
+[^public]: [Vyper: Public Variables](https://vyper.readthedocs.io/en/v0.2.0/scoping-and-declarations.html#declaring-public-variables)
+
+[^visibility] [Vyper: Function Visibility](https://vyper.readthedocs.io/en/v0.1.0-beta.4/structure-of-a-contract.html#functions)

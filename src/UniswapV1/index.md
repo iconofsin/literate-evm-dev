@@ -1,11 +1,17 @@
 # Uniswap v1 - Overview
 
-The original Uniswap was written in Vyper and consists of _two_ rather concise smart contracts.
-
+### Resources 
 - [Protocol](https://docs.uniswap.org/protocol/V1/introduction)
 - [Repository](https://github.com/Uniswap/v1-contracts)
 - [Lightweight Formal Verification of Uniswap Smart Contract](https://github.com/runtimeverification/verified-smart-contracts/tree/uniswap/uniswap)
 
+### Notes
+- [ ] I was unable to compile the contracts by following the instructions in the original repository and using the version of the compiler used for deployment of Uni v1. The errors had to do with the syntax of declarations for mappings. If you know of a solutions, do let me know.
+- [ ] Code that doesn't quite make sense in the context of the repository will be marked as such.
+
+### Overview
+
+The original Uniswap was written in Vyper and consists of _two_ rather concise smart contracts.
 The two contracts are the Factory and the Exchange.
 
 The [Factory](./factory.md) allows to:
@@ -13,7 +19,7 @@ The [Factory](./factory.md) allows to:
 - Look up tokens and exchanges.
 
 The [Exchange](./exchange.md):
-- Holds reserves of ETH and of the associated ERC20 token;
+- Holds reserves of ETH and of the associated ERC20[^erc20] token;
 - Allows swapping from ETH to the associated ERC20 token and vice versa;
 - Allows adding liquidity to the exchange -- the liquidity provider deposits both ETH and the ERC20 token;
 - Tracks liquidity contributions through an internal "pool token" (ERC20), which is minted and burned when liquidity is added and withdrawn;
@@ -31,3 +37,4 @@ However, Uniswap v1 supports ERC20/ERC20 trades which involve both Uniswap's "si
 
 The developers made a conscious decision that Uniswap v1 contracts will be updated by releasing new, improved versions of the system, not by upgrading the original contracts; whereby liquidity providers will have an option of moving to the new system or keeping the liquidity in the old one.
 
+[^erc20]: <https://eips.ethereum.org/EIPS/eip-20>
